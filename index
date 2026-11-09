@@ -3,774 +3,266 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Orlando Under the Stars | Event Map</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATEEZ Weekend | Orlando Events</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-:root {
-  --navy: #061126;
-  --blue: #102849;
-  --light-blue: #74c7ff;
-  --text: #eaf3ff;
-  --muted: #a6b9d5;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#050b1a;color:white;
+ font-family:Arial,sans-serif;
 }
-
-* {
-  box-sizing: border-box;
+header{
+ text-align:center;padding:45px 15px;
+ background:linear-gradient(135deg,#07152f,#162b50,#070b17);
+ border-bottom:2px solid #d6ac64;
 }
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: var(--text);
-  background: var(--navy);
+header h1{
+ font-size:clamp(36px,7vw,65px);
+ letter-spacing:5px;margin:10px 0;
+ color:#e9c680;text-shadow:0 0 25px #c49a5555;
 }
-
-/* STAR BACKGROUND */
-
-.stars {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background-image:
-    radial-gradient(2px 2px at 10% 20%, white 98%, transparent),
-    radial-gradient(2px 2px at 30% 65%, #8dcfff 98%, transparent),
-    radial-gradient(2px 2px at 65% 15%, white 98%, transparent),
-    radial-gradient(2px 2px at 85% 50%, #8dcfff 98%, transparent),
-    radial-gradient(1px 1px at 50% 85%, white 98%, transparent);
-  background-size: 230px 190px;
-  opacity: 0.7;
+header p{color:#c2cce0;letter-spacing:3px}
+.stars{
+ color:#e9c680;letter-spacing:15px;font-size:20px;
 }
-
-/* HEADER */
-
-header {
-  background: #07162f;
-  padding: 22px;
-  text-align: center;
-  border-bottom: 1px solid #254b77;
+.banner{
+ max-width:1100px;margin:25px auto;
+ height:220px;border:1px solid #806b47;
+ border-radius:14px;overflow:hidden;
+ background:linear-gradient(120deg,#101f3b,#080e1c);
+ display:grid;place-items:center;text-align:center;
+ color:#a5b5ce;background-size:cover;
+ background-position:center;
 }
-
-.logo {
-  font-size: 26px;
-  font-weight: bold;
-  color: #b4e4ff;
-  letter-spacing: 1px;
+/* Add your banner photo URL below */
+.banner{
+ background-image:linear-gradient(#06112677,#06112677),
+ url("");
 }
-
-header p {
-  color: var(--muted);
-  margin-bottom: 0;
+main{max-width:1200px;margin:auto;padding:15px}
+.tabs{display:flex;gap:10px;margin:25px 0}
+.tabs button{
+ flex:1;padding:17px 5px;border:1px solid #9e8150;
+ border-radius:9px;background:#101d36;
+ color:#c7d2e7;font-weight:bold;font-size:16px;
+ cursor:pointer;
 }
-
-/* HERO */
-
-.hero {
-  text-align: center;
-  padding: 55px 20px 45px;
-  background: radial-gradient(
-    ellipse at top,
-    #173c6b 0%,
-    #081831 65%,
-    transparent 100%
-  );
+.tabs button.active{
+ background:#d6ac64;color:#081326;
+ box-shadow:0 0 20px #d6ac6440;
 }
-
-.hero h1 {
-  font-size: clamp(34px, 6vw, 62px);
-  margin: 0 0 18px;
-  line-height: 1.1;
+.layout{
+ display:grid;grid-template-columns:350px 1fr;
+ gap:20px;
 }
-
-.hero h1 span {
-  color: var(--light-blue);
-  text-shadow: 0 0 25px #3f9aff;
+#list{
+ background:#0d1b32;border:1px solid #354665;
+ border-radius:12px;padding:15px;
+ max-height:570px;overflow:auto;
 }
-
-.hero p {
-  color: #c1d3ed;
-  font-size: 16px;
-  max-width: 600px;
-  margin: auto;
-  line-height: 1.6;
+.card{
+ background:#142541;border:1px solid #344b6e;
+ border-radius:12px;overflow:hidden;
+ margin-bottom:16px;cursor:pointer;
 }
-
-/* FILTERS */
-
-.filters {
-  max-width: 1250px;
-  margin: 25px auto;
-  padding: 20px;
-  background: #112746;
-  border: 1px solid #31547d;
-  border-radius: 15px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: end;
+.card:hover{border-color:#d6ac64}
+.card img{
+ width:100%;height:150px;object-fit:cover;
+ display:block;
 }
-
-.filter {
-  flex: 1;
-  min-width: 180px;
+.image-placeholder{
+ height:145px;display:grid;place-items:center;
+ background:#1b3050;color:#a9bedb;
 }
-
-label {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 8px;
-  color: #a6cfff;
-  font-weight: bold;
+.details{padding:15px}
+.details h3{margin:8px 0;color:#f2d398}
+.details p{font-size:13px;color:#c0cce0;line-height:1.5}
+.time{color:#eac27c;font-weight:bold;font-size:13px}
+#map{
+ height:570px;border-radius:12px;
+ border:2px solid #a48b5b;
 }
-
-input, select {
-  width: 100%;
-  padding: 13px;
-  background: #091a34;
-  color: white;
-  border: 1px solid #375780;
-  border-radius: 8px;
-  font-size: 14px;
-  color-scheme: dark;
+.leaflet-popup-content{color:#172139}
+.leaflet-popup-content a{color:#1767ae}
+.empty{text-align:center;color:#9badc9;padding:45px 10px}
+footer{
+ text-align:center;padding:30px;color:#a2b2cc;
+ font-size:12px;
 }
-
-button {
-  background: #3995d5;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 13px 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #58b4f5;
-}
-
-/* MAIN LAYOUT */
-
-.container {
-  max-width: 1250px;
-  margin: 25px auto 50px;
-  padding: 0 15px;
-}
-
-.section-title {
-  font-size: 25px;
-  margin-bottom: 20px;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 20px;
-}
-
-/* EVENT LIST */
-
-.events-panel {
-  background: #102340;
-  border: 1px solid #2d4b71;
-  border-radius: 14px;
-  padding: 18px;
-  height: 600px;
-  overflow-y: auto;
-}
-
-.events-panel h2 {
-  margin-top: 0;
-  font-size: 19px;
-}
-
-.event-card {
-  background: #172e51;
-  border: 1px solid #2d4d76;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 13px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.event-card:hover {
-  border-color: #74c7ff;
-  background: #20426d;
-  transform: translateY(-2px);
-}
-
-.event-card h3 {
-  margin: 7px 0;
-  font-size: 17px;
-  color: white;
-}
-
-.event-card p {
-  color: #bdcde4;
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 6px 0;
-}
-
-.event-time {
-  color: #8cd5ff;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.event-category {
-  display: inline-block;
-  background: #314c86;
-  border-radius: 20px;
-  padding: 5px 10px;
-  font-size: 11px;
-  margin-top: 9px;
-}
-
-.empty {
-  text-align: center;
-  padding: 55px 10px;
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-/* MAP */
-
-#map {
-  height: 600px;
-  border-radius: 14px;
-  border: 2px solid #355b89;
-  z-index: 1;
-}
-
-/* CUSTOM MAP PIN */
-
-.custom-pin {
-  width: 38px;
-  height: 38px;
-  background: #2489c9;
-  border: 3px solid white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 19px;
-  box-shadow: 0 0 18px #68c6ff;
-}
-
-/* POPUP */
-
-.popup {
-  color: #15253c;
-  min-width: 210px;
-}
-
-.popup h3 {
-  margin: 8px 0;
-  color: #102849;
-}
-
-.popup p {
-  margin: 7px 0;
-  line-height: 1.5;
-}
-
-.popup a {
-  color: #176ba5;
-  font-weight: bold;
-}
-
-/* FOOTER */
-
-footer {
-  text-align: center;
-  padding: 25px;
-  border-top: 1px solid #26446c;
-  color: #9bb1ce;
-  font-size: 13px;
-}
-
-@media (max-width: 800px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .events-panel {
-    height: 330px;
-  }
-
-  #map {
-    height: 450px;
-  }
+@media(max-width:800px){
+ .layout{grid-template-columns:1fr}
+ #list{max-height:350px}
+ #map{height:420px}
+ .tabs button{font-size:13px}
 }
 </style>
 </head>
 
 <body>
-
-<div class="stars"></div>
-
 <header>
-  <div class="logo">✦ Orlando Under the Stars ✦</div>
-  <p>Your city. Your calendar. Your next adventure.</p>
+ <div class="stars">✦ ✧ ✦ ✧ ✦</div>
+ <h1>ATEEZ WEEKEND</h1>
+ <p>ORLANDO • ATINY EVENT MAP</p>
+ <div class="stars">✧ ✦ ✧</div>
 </header>
 
-<section class="hero">
-  <h1>
-    Discover Orlando<br>
-    <span>Under the Stars ✨</span>
-  </h1>
+<main>
 
-  <p>
-    Find festivals, concerts, food events, family activities,
-    outdoor adventures, and more. Choose a date and explore
-    what's happening around Orlando.
-  </p>
-</section>
+<!-- BANNER IMAGE AREA -->
+<div class="banner">
+ <div>
+  <h2>🏴‍☠️ ATEEZ IN ORLANDO</h2>
+  <p>Replace this banner with your favorite image!</p>
+ </div>
+</div>
 
-<section class="filters">
+<!-- THREE DAY TABS -->
+<div class="tabs">
+ <button class="active" onclick="showDay('Friday',this)">FRIDAY</button>
+ <button onclick="showDay('Saturday',this)">SATURDAY</button>
+ <button onclick="showDay('Sunday',this)">SUNDAY</button>
+</div>
 
-  <div class="filter">
-    <label for="eventDate">📅 Select Date</label>
-    <input type="date" id="eventDate">
-  </div>
+<h2 id="heading">✦ Friday Events</h2>
 
-  <div class="filter">
-    <label for="categoryFilter">🎭 Activity</label>
-    <select id="categoryFilter">
-      <option value="all">All Activities</option>
-      <option value="music">🎵 Music & Concerts</option>
-      <option value="food">🍔 Food & Drinks</option>
-      <option value="art">🎨 Art & Culture</option>
-      <option value="family">🎡 Family & Kids</option>
-      <option value="sports">🏀 Sports & Fitness</option>
-      <option value="outdoors">🌳 Outdoor Events</option>
-      <option value="community">✨ Community & Other</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label for="searchInput">🔎 Search Events</label>
-    <input
-      type="search"
-      id="searchInput"
-      placeholder="Search event or location..."
-    >
-  </div>
-
-  <button id="resetBtn">Reset</button>
-
-</section>
-
-<main class="container">
-
-  <h2 class="section-title" id="dateHeading">
-    ✨ Explore Orlando Events
-  </h2>
-
-  <div class="layout">
-
-    <div class="events-panel">
-      <h2 id="eventCount">Events</h2>
-      <div id="eventList"></div>
-    </div>
-
-    <div id="map"></div>
-
-  </div>
-
+<div class="layout">
+ <div id="list"></div>
+ <div id="map"></div>
+</div>
 </main>
 
 <footer>
-  ✦ Orlando Under the Stars ✦<br><br>
-  Event times are shown in Orlando local time.<br>
-  Confirm details with event organizers before attending.<br><br>
-  © 2026 Orlando Events Map
+ ✦ ATEEZ ORLANDO WEEKEND ✦<br><br>
+ Fan-made event guide • Not affiliated with ATEEZ or KQ Entertainment
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
-/* ==========================================
-   OWNER EVENT MANAGEMENT
+/* =====================================
+   ADD YOUR EVENTS HERE
 
-   ADD YOUR EVENTS IN THIS SECTION.
-
-   Only you or someone with GitHub repository
-   write permission can publish changes.
-
-   Delete an event object to remove an event.
-========================================== */
+   day: Friday, Saturday, or Sunday
+   image: Your photo URL
+   lat/lng: Location coordinates
+===================================== */
 
 const events = [
 
-  /*
-  EXAMPLE EVENT — REMOVE THESE COMMENT MARKERS
-  AND EDIT THE DETAILS TO PUBLISH AN EVENT.
-
-  {
-    id: 1,
-    title: "Orlando Music Festival",
-    date: "2026-12-05",
-    startTime: "18:00",
-    endTime: "22:00",
-    category: "music",
-    venue: "Lake Eola Park",
-    address: "512 E Washington St, Orlando, FL",
-    lat: 28.5431,
-    lng: -81.3734,
-    description: "Live music and entertainment.",
-    price: "Free",
-    url: "https://example.com"
-  }
-
-  */
+ // EXAMPLE - REPLACE WITH A REAL EVENT
+ /*
+ {
+  day:"Friday",
+  title:"ATEEZ Fan Gathering",
+  time:"5:00 PM - 8:00 PM",
+  place:"Lake Eola Park",
+  address:"512 E Washington St, Orlando, FL",
+  description:"ATINY meetup and activities!",
+  image:"YOUR-IMAGE-URL",
+  lat:28.5431,
+  lng:-81.3734,
+  link:"https://example.com"
+ },
+ */
 
 ];
 
-
-/* ==========================================
-   MAP CONFIGURATION
-========================================== */
-
-const orlandoCenter = [28.5383, -81.3792];
-
-const map = L.map("map", {
-  scrollWheelZoom: false
-}).setView(orlandoCenter, 11);
+/* MAP */
+const map=L.map("map").setView([28.5383,-81.3792],11);
 
 L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution: "&copy; OpenStreetMap contributors",
-    maxZoom: 19
-  }
+ "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+ {attribution:"© OpenStreetMap contributors"}
 ).addTo(map);
 
-const markerLayer = L.featureGroup().addTo(map);
+const pins=L.featureGroup().addTo(map);
+let currentDay="Friday";
 
-
-/* ==========================================
-   EVENT CATEGORY ICONS
-========================================== */
-
-const categoryIcons = {
-  music: "🎵",
-  food: "🍔",
-  art: "🎨",
-  family: "🎡",
-  sports: "🏀",
-  outdoors: "🌳",
-  community: "✨"
-};
-
-
-/* ==========================================
-   DATE AND TIME HELPERS
-========================================== */
-
-function getToday() {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(new Date());
+function safe(text){
+ return String(text??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ })[c]);
+}
+function safeURL(value){
+ try{
+  const u=new URL(value);
+  return ["https:","http:"].includes(u.protocol)?u.href:"";
+ }catch{return "";}
 }
 
-function formatDate(value) {
-  const date = new Date(value + "T12:00:00");
-
-  return date.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  });
+function showDay(day,button){
+ currentDay=day;
+ document.querySelectorAll(".tabs button")
+  .forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ render();
 }
 
-function formatTime(value) {
-  if (!value) return "Time TBA";
+function render(){
+ document.getElementById("heading").textContent=
+  "✦ "+currentDay+" Events";
 
-  const [hours, minutes] = value.split(":").map(Number);
+ const list=document.getElementById("list");
+ list.innerHTML="";
+ pins.clearLayers();
 
-  return new Date(
-    2026, 0, 1, hours, minutes
-  ).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit"
-  });
+ const filtered=events.filter(e=>e.day===currentDay);
+
+ if(!filtered.length){
+  list.innerHTML='<div class="empty">✧<h3>No events added yet</h3><p>Check back soon!</p></div>';
+  map.setView([28.5383,-81.3792],11);
+  return;
+ }
+
+ filtered.forEach(e=>{
+  const lat=Number(e.lat),lng=Number(e.lng);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng))return;
+
+  const card=document.createElement("div");
+  card.className="card";
+
+  const image=safeURL(e.image);
+  const link=safeURL(e.link);
+
+  card.innerHTML=`
+   ${image?
+    `<img src="${safe(image)}" alt="${safe(e.title)}">`:
+    '<div class="image-placeholder">✦ EVENT PHOTO ✦</div>'
+   }
+   <div class="details">
+    <span class="time">★ ${safe(e.time)}</span>
+    <h3>${safe(e.title)}</h3>
+    <p>📍 ${safe(e.place)}</p>
+    <p>${safe(e.description)}</p>
+   </div>`;
+
+  list.appendChild(card);
+
+  const pin=L.marker([lat,lng]).addTo(pins);
+  pin.bindPopup(`
+   <h3>★ ${safe(e.title)}</h3>
+   <p>🕒 ${safe(e.time)}</p>
+   <p>📍 ${safe(e.address)}</p>
+   <p>${safe(e.description)}</p>
+   ${link?`<a href="${safe(link)}" target="_blank" rel="noopener noreferrer">Event Details ↗</a>`:""}
+  `);
+
+  card.onclick=()=>{
+   map.setView([lat,lng],14);
+   pin.openPopup();
+  };
+ });
+
+ if(pins.getLayers().length){
+  map.fitBounds(pins.getBounds().pad(.2),{maxZoom:13});
+ }
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-    char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[char]
-  );
-}
-
-function safeURL(value) {
-  try {
-    const url = new URL(value);
-
-    return ["https:", "http:"].includes(url.protocol)
-      ? url.href
-      : "";
-  } catch {
-    return "";
-  }
-}
-
-
-/* ==========================================
-   DISPLAY EVENTS
-========================================== */
-
-function displayEvents() {
-
-  const selectedDate =
-    document.getElementById("eventDate").value;
-
-  const selectedCategory =
-    document.getElementById("categoryFilter").value;
-
-  const searchText =
-    document.getElementById("searchInput")
-      .value.toLowerCase().trim();
-
-  const eventList =
-    document.getElementById("eventList");
-
-  const eventCount =
-    document.getElementById("eventCount");
-
-  const dateHeading =
-    document.getElementById("dateHeading");
-
-  markerLayer.clearLayers();
-  eventList.innerHTML = "";
-
-  const filteredEvents = events.filter(event => {
-
-    const matchesDate =
-      event.date === selectedDate;
-
-    const matchesCategory =
-      selectedCategory === "all" ||
-      event.category === selectedCategory;
-
-    const searchable = [
-      event.title,
-      event.venue,
-      event.address,
-      event.description
-    ].join(" ").toLowerCase();
-
-    const matchesSearch =
-      searchable.includes(searchText);
-
-    return (
-      matchesDate &&
-      matchesCategory &&
-      matchesSearch
-    );
-
-  }).sort((a, b) =>
-    (a.startTime || "").localeCompare(b.startTime || "")
-  );
-
-  dateHeading.textContent =
-    "✨ " + formatDate(selectedDate);
-
-  eventCount.textContent =
-    filteredEvents.length + " Events";
-
-  if (filteredEvents.length === 0) {
-
-    eventList.innerHTML = `
-      <div class="empty">
-        <div style="font-size:42px">🌙</div>
-        <h3>No events listed yet</h3>
-        <p>
-          There are no events matching this date
-          and your filters.
-          Try another date or activity.
-        </p>
-      </div>
-    `;
-
-    map.setView(orlandoCenter, 11);
-    return;
-  }
-
-  filteredEvents.forEach(event => {
-
-    const latitude = Number(event.lat);
-    const longitude = Number(event.lng);
-
-    if (!Number.isFinite(latitude) ||
-        !Number.isFinite(longitude)) return;
-
-    const icon =
-      categoryIcons[event.category] || "📍";
-
-    const start = formatTime(event.startTime);
-
-    const end = event.endTime
-      ? " – " + formatTime(event.endTime)
-      : "";
-
-    const card = document.createElement("div");
-    card.className = "event-card";
-
-    card.innerHTML = `
-      <div class="event-time">
-        ${escapeHTML(start + end)}
-      </div>
-
-      <h3>
-        ${icon} ${escapeHTML(event.title)}
-      </h3>
-
-      <p>
-        📍 ${escapeHTML(event.venue || event.address || "Orlando")}
-      </p>
-
-      <p>${escapeHTML(event.description || "")}</p>
-
-      <p>
-        🎟 ${escapeHTML(event.price || "See event details")}
-      </p>
-
-      <span class="event-category">
-        ${escapeHTML(event.category || "community")}
-      </span>
-    `;
-
-    eventList.appendChild(card);
-
-    const customIcon = L.divIcon({
-      className: "",
-      html: `<div class="custom-pin">${icon}</div>`,
-      iconSize: [38, 38],
-      iconAnchor: [19, 19]
-    });
-
-    const marker = L.marker(
-      [latitude, longitude],
-      { icon: customIcon }
-    ).addTo(markerLayer);
-
-    const eventURL = safeURL(event.url);
-
-    const eventLink = eventURL
-      ? `<p><a href="${escapeHTML(eventURL)}"
-          target="_blank"
-          rel="noopener noreferrer">
-          More Information ↗
-        </a></p>`
-      : "";
-
-    marker.bindPopup(`
-      <div class="popup">
-        <h3>${icon} ${escapeHTML(event.title)}</h3>
-
-        <p>
-          📅 ${escapeHTML(formatDate(event.date))}
-        </p>
-
-        <p>
-          🕒 ${escapeHTML(start + end)}
-        </p>
-
-        <p>
-          📍 ${escapeHTML(event.venue || "")}
-        </p>
-
-        <p>
-          ${escapeHTML(event.address || "")}
-        </p>
-
-        <p>
-          ${escapeHTML(event.description || "")}
-        </p>
-
-        <p>
-          🎟 ${escapeHTML(event.price || "See organizer")}
-        </p>
-
-        ${eventLink}
-      </div>
-    `);
-
-    card.addEventListener("click", () => {
-      map.setView([latitude, longitude], 14);
-      marker.openPopup();
-    });
-
-  });
-
-  if (markerLayer.getLayers().length > 1) {
-    map.fitBounds(markerLayer.getBounds().pad(0.15), {
-      maxZoom: 13
-    });
-  } else if (markerLayer.getLayers().length === 1) {
-    map.fitBounds(markerLayer.getBounds(), {
-      maxZoom: 13
-    });
-  }
-
-}
-
-
-/* ==========================================
-   FILTER CONTROLS
-========================================== */
-
-document.getElementById("eventDate").value =
-  getToday();
-
-document.getElementById("eventDate")
-  .addEventListener("change", displayEvents);
-
-document.getElementById("categoryFilter")
-  .addEventListener("change", displayEvents);
-
-document.getElementById("searchInput")
-  .addEventListener("input", displayEvents);
-
-document.getElementById("resetBtn")
-  .addEventListener("click", () => {
-
-    document.getElementById("eventDate").value =
-      getToday();
-
-    document.getElementById("categoryFilter").value =
-      "all";
-
-    document.getElementById("searchInput").value =
-      "";
-
-    displayEvents();
-  });
-
-
-/* INITIALIZE */
-
-displayEvents();
-
+render();
 </script>
-
 </body>
 </html>
