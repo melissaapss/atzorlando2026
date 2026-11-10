@@ -208,11 +208,19 @@ function safe(text){
   '"':"&quot;","'":"&#39;"
  })[c]);
 }
-function safeURL(value){
- try{
-  const u=new URL(value);
-  return ["https:","http:"].includes(u.protocol)?u.href:"";
- }catch{return "";}
+ 
+function safeURL(value) {
+  if (!value) return "";
+
+  try {
+    const url = new URL(value, window.location.href);
+
+    return ["https:", "http:"].includes(url.protocol)
+      ? url.href
+      : "";
+  } catch {
+    return "";
+  }
 }
 
 function showDay(day,button){
